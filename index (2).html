@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alexander and the Terrible, Horrible, No Good, Very Bad Data Breach</title>
+  <meta name="description" content="A whimsical children's storybook about cybersecurity, phishing, and data protection. A cautionary tale for modern security teams.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --sapphire:  #1862F7;
+      --emerald:   #0D5C3A;
+      --garnet:    #4A101D;
+      --ruby:      #BE123C;
+      --canvas:    #F8FAFC;
+      --slate:     #F1F5F9;
+      --border:    #E2E8F0;
+      --ink:       #0D1117;
+      --secondary: #64748B;
+
+      /* Storybook-specific whimsy palette */
+      --book-cream:   #FFF8ED;
+      --book-warm:    #FEF3C7;
+      --book-paper:   #FFFDF7;
+      --book-spine:   #1862F7;
+      --book-gutter:  #E8D5B7;
+      --book-shadow:  rgba(0,0,0,0.18);
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: 'DM Sans', sans-serif;
+      background: #2D1B0E;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── SHELF HEADER ── */
+    .shelf-header {
+      width: 100%;
+      text-align: center;
+      padding: 36px 24px 20px;
+      color: #FFF8ED;
+    }
+    .shelf-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,248,237,0.5);
+      margin-bottom: 10px;
+    }
+    .shelf-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #FFF8ED;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .shelf-title .highlight {
+      color: #F59E0B;
+    }
+    .shelf-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255,248,237,0.55);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* ── NAVIGATION ── */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 24px 20px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255,248,237,0.1);
+      color: rgba(255,248,237,0.7);
+    }
+    .nav-btn:hover {
+      background: rgba(255,248,237,0.2);
+      color: #FFF8ED;
+      transform: translateY(-1px);
+    }
+    .nav-btn.active {
+      background: #1862F7;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(24,98,247,0.4);
+    }
+    .nav-arrow {
+      font-size: 1.2rem;
+      background: rgba(255,248,237,0.12);
+      color: #FFF8ED;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .nav-arrow:hover {
+      background: #1862F7;
+      transform: scale(1.1);
+    }
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: default;
+      transform: none;
+    }
+
+    /* ── BOOK CONTAINER ── */
+    .book-stage {
+      width: 100%;
+      max-width: 1100px;
+      padding: 0 20px 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* The open book spread — just a shell for shadow/radius */
+    .book-spread {
+      width: 100%;
+      display: block;
+      border-radius: 8px 8px 4px 4px;
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.6),
+        0 20px 50px rgba(0,0,0,0.4),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+    }
+
+    /* Binding gutter shadow */
+    .book-spread::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 48px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(0,0,0,0.12) 30%,
+        rgba(0,0,0,0.22) 48%,
+        rgba(0,0,0,0.22) 52%,
+        rgba(0,0,0,0.12) 70%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ── PAGE HALVES ── */
+    .page-half {
+      background: var(--book-paper);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Left page: illustration fills edge-to-edge */
+    .page-half.left {
+      border-radius: 8px 0 0 4px;
+      background: #1a1a2e;
+      min-height: 480px;
+      overflow: hidden;
+    }
+    /* Cover any baked-in page numbers in the illustration bottom-right corner */
+    .page-half.left::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 52px;
+      height: 44px;
+      background: linear-gradient(135deg, transparent 40%, #FFF8ED 60%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .page-half.right {
+      border-radius: 0 8px 4px 0;
+      background: linear-gradient(225deg, #FFFDF7 0%, #FFF8ED 100%);
+    }
+
+    /* Cover special */
+    .page-half.cover-left {
+      background: linear-gradient(160deg, #1862F7 0%, #0D4BC4 60%, #0A3A9A 100%);
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 30px;
+    }
+    .page-half.cover-right {
+      background: var(--book-paper);
+    }
+
+    /* ── INNER CONTENT AREAS ── */
+    /* Left page-inner: just a positioning context (illustration is absolute) */
+    .page-half.left .page-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      min-height: 480px;
+    }
+
+    /* Right page-inner: text sits here with padding */
+    .page-half.right .page-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 36px 32px 24px;
+      position: relative;
+      justify-content: flex-start;
+    }
+
+    /* Subtle page texture lines on text side only */
+    .page-half.right .page-inner::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(24,98,247,0.04) 31px,
+        rgba(24,98,247,0.04) 32px
+      );
+      pointer-events: none;
+    }
+
+    /* ── ILLUSTRATION (full-bleed left page) ── */
+    .illustration-wrap {
+      position: absolute;
+      inset: 0;
+      border-radius: 0;
+      overflow: hidden;
+    }
+    .illustration-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── PAGE NUMBER BADGE (bottom of text page) ── */
+    .page-num-badge {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    .badge-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid #C4A882;
+      box-shadow: 0 0 0 3px rgba(196,168,130,0.18), inset 0 0 0 2px rgba(196,168,130,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: #8B7355;
+      background: rgba(255,252,245,0.8);
+      flex-shrink: 0;
+    }
+    .badge-flourish {
+      font-size: 0.8rem;
+      color: #C4A882;
+      opacity: 0.7;
+      line-height: 1;
+    }
+
+    /* ── TEXT CONTENT ── */
+    .page-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0;
+    }
+
+    .page-heading {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .page-heading .accent { color: var(--ruby); }
+    .page-heading .good   { color: var(--emerald); }
+    .page-heading .blue   { color: var(--sapphire); }
+
+    .story-line {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(0.82rem, 1.6vw, 1.05rem);
+      font-weight: 400;
+      color: #2D1B0E;
+      line-height: 1.7;
+      margin-bottom: 2px;
+    }
+    .story-line.bold {
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .story-line.italic {
+      font-style: italic;
+      color: var(--secondary);
+    }
+    .story-line.dramatic {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 900;
+      color: var(--ruby);
+      font-family: 'Nunito', sans-serif;
+      line-height: 1.3;
+      margin: 6px 0;
+    }
+    .story-line.alert-box {
+      background: #FFF0F3;
+      border: 2px solid #FECDD3;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 800;
+      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+      color: var(--ruby);
+      letter-spacing: 0.02em;
+      display: inline-block;
+      margin: 8px 0;
+    }
+    .story-line.shrug {
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      font-weight: 900;
+      color: var(--secondary);
+      text-align: center;
+      padding: 10px;
+      background: var(--slate);
+      border-radius: 8px;
+      letter-spacing: 0.05em;
+      margin: 6px 0;
+    }
+    .story-line.list-item {
+      padding-left: 16px;
+      position: relative;
+    }
+    .story-line.list-item::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--sapphire);
+      font-weight: 900;
+    }
+    .story-line.gap { margin-top: 8px; }
+    .story-line.plan-item {
+      padding: 4px 10px;
+      background: rgba(24,98,247,0.06);
+      border-left: 3px solid var(--sapphire);
+      border-radius: 0 6px 6px 0;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: clamp(0.78rem, 1.5vw, 0.98rem);
+    }
+
+    /* ── COVER PAGE STYLES ── */
+    .cover-left-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 24px;
+      width: fit-content;
+    }
+    .cover-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #F59E0B;
+    }
+    .cover-main-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      margin-bottom: 16px;
+    }
+    .cover-main-title .cover-bad {
+      color: #F59E0B;
+      display: inline-block;
+      transform: rotate(-2deg);
+    }
+    .cover-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+      font-weight: 400;
+      color: rgba(255,255,255,0.65);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+    .cover-divider {
+      width: 40px;
+      height: 3px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+      margin-bottom: 20px;
+    }
+    .cover-author {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .cover-author span {
+      color: rgba(255,255,255,0.85);
+    }
+    .cover-footer {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── PAGE DECORATIONS ── */
+    .page-star {
+      position: absolute;
+      font-size: 0.8rem;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* ── HIDDEN STATES ── */
+    .spread-view {
+      display: none;
+    }
+    .spread-view.active {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      min-height: 560px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .spread-view.active {
+        grid-template-columns: 1fr;
+        border-radius: 8px;
+      }
+      .page-half.left {
+        border-radius: 8px 8px 0 0;
+        min-height: 300px;
+      }
+      .page-half.left .page-inner {
+        min-height: 300px;
+      }
+      .page-half.right {
+        border-radius: 0 0 8px 8px;
+      }
+      .book-spread::after {
+        display: none;
+      }
+      .nav-bar {
+        gap: 6px;
+      }
+      .nav-btn {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+      }
+    }
+
+    /* ── PAGE TURN ANIMATION ── */
+    .spread-view {
+      animation: fadeIn 0.35s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PROGRESS INDICATOR ── */
+    .progress-bar-wrap {
+      width: 90%;
+      max-width: 500px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      margin: 0 auto 20px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #1862F7, #F59E0B);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="shelf-header">
+    <p class="shelf-eyebrow">A Cautionary Tale for Modern Security Teams</p>
+    <h1 class="shelf-title">Alexander and the <span class="highlight">Terrible, Horrible,</span><br>No Good, Very Bad Data Breach</h1>
+    <p class="shelf-sub">Illustrated storybook · confidencial.io</p>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill" style="width: 6.67%"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav-bar" id="navBar" aria-label="Book navigation">
+    <button class="nav-arrow" id="prevBtn" onclick="changePage(-1)" disabled aria-label="Previous page">&#8592;</button>
+    <button class="nav-btn active" onclick="goToPage(0)" id="navCover">Cover</button>
+    <button class="nav-btn" onclick="goToPage(1)" id="nav1">1</button>
+    <button class="nav-btn" onclick="goToPage(2)" id="nav2">2</button>
+    <button class="nav-btn" onclick="goToPage(3)" id="nav3">3</button>
+    <button class="nav-btn" onclick="goToPage(4)" id="nav4">4</button>
+    <button class="nav-btn" onclick="goToPage(5)" id="nav5">5</button>
+    <button class="nav-btn" onclick="goToPage(6)" id="nav6">6</button>
+    <button class="nav-btn" onclick="goToPage(7)" id="nav7">7</button>
+    <button class="nav-btn" onclick="goToPage(8)" id="nav8">8</button>
+    <button class="nav-btn" onclick="goToPage(9)" id="nav9">9</button>
+    <button class="nav-btn" onclick="goToPage(10)" id="nav10">10</button>
+    <button class="nav-btn" onclick="goToPage(11)" id="nav11">11</button>
+    <button class="nav-btn" onclick="goToPage(12)" id="nav12">12</button>
+    <button class="nav-btn" onclick="goToPage(13)" id="nav13">13</button>
+    <button class="nav-btn" onclick="goToPage(14)" id="nav14">End</button>
+    <button class="nav-arrow" id="nextBtn" onclick="changePage(1)" aria-label="Next page">&#8594;</button>
+  </nav>
+
+  <!-- BOOK STAGE -->
+  <main class="book-stage">
+    <div class="book-spread" id="bookSpread">
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 0: COVER
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view active" id="spread0">
+
+        <!-- Left: Title card (blue) -->
+        <div class="page-half cover-left">
+          <div style="padding: 36px 32px; display:flex; flex-direction:column; height:100%; justify-content:space-between;">
+            <div>
+              <div class="cover-badge"><span class="cover-badge-dot"></span> Children's Book</div>
+              <h2 class="cover-main-title">Alexander<br>and the <span class="cover-bad">Terrible,</span><br>Horrible,<br>No Good,<br>Very Bad<br>Data Breach</h2>
+              <p class="cover-subtitle">A cautionary tale for modern security teams</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Cover illustration -->
+        <div class="page-half cover-right">
+          <div style="width:100%; height:100%; overflow:hidden; border-radius: 0 8px 4px 0;">
+            <img src="img/cover_v3.png"
+                 alt="Cover illustration: Alexander at laptop with hacker shadow looming behind him"
+                 style="width:100%; height:100%; object-fit:cover; display:block;">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 1: PAGE 1
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread1">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p01_v4.png"
+                   alt="Alexander in bed with gum in hair, looking alarmed at his laptop showing password expiry warning">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">Alexander woke up with<br><span class="accent">gum in his hair.</span></p>
+              <p class="story-line">And a calendar full of meetings.</p>
+              <p class="story-line">And a very urgent email that said:</p>
+              <p class="story-line alert-box">⚠️ PASSWORD EXPIRES IN 10 MINUTES</p>
+              <p class="story-line gap">Alexander was late.</p>
+              <p class="story-line bold">So Alexander clicked it.</p>
+              <p class="story-line gap italic">That was the beginning of a terrible, horrible, no good, very bad breach.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">1</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 2: PAGE 2
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread2">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p02_v3.png"
+                   alt="Alexander looking relieved at his desk, while a villain hacker in the dark holds a glowing orb with Alexander's stolen password">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">Nothing happened.</p>
+              <p class="story-line">Alexander thought this was excellent news.</p>
+              <p class="story-line gap bold">But somewhere far away...</p>
+              <p class="story-line">a hacker now had Alexander's password.</p>
+              <p class="story-line">And Alexander's MFA session.</p>
+              <p class="story-line">And Alexander's very bad luck.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">2</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 3: PAGE 3
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread3">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p03_v3.png"
+                   alt="Split: Alexander cheerfully at office desk with disappointing salad, and below the hacker tiptoeing through digital files">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">At work, everything<br>felt <span class="good">normal.</span></p>
+              <p class="story-line">Alexander answered emails.</p>
+              <p class="story-line">Joined meetings.</p>
+              <p class="story-line">Ate a very disappointing salad.</p>
+              <p class="story-line gap bold">Meanwhile...</p>
+              <p class="story-line">the hacker logged in.</p>
+              <p class="story-line italic">Very quietly.</p>
+              <p class="story-line italic">Very rudely.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">3</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 4: PAGE 4
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread4">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/page_04_hacker_finds_files_1777384310663.png"
+                   alt="Villain hacker surrounded by glowing labeled folders: Contracts, Employee Records, Financial Docs, Customer Data, Product Plans, and dramatically opening the DO NOT OPEN folder">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The hacker searched<br>the company's <span class="accent">files.</span></p>
+              <p class="story-line bold gap">They found:</p>
+              <p class="story-line list-item">contracts</p>
+              <p class="story-line list-item">employee records</p>
+              <p class="story-line list-item">financial documents</p>
+              <p class="story-line list-item">customer data</p>
+              <p class="story-line list-item">product plans</p>
+              <p class="story-line gap">and a folder labeled:</p>
+              <p class="story-line alert-box">🚫 DO NOT OPEN</p>
+              <p class="story-line bold">The hacker opened it immediately.</p>
+              <p class="story-line italic">Alexander would have too.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">4</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 5: PAGE 5
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread5">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/page_05_hacker_downloads_1777384322825.png"
+                   alt="Villain hacker gleefully stuffing enormous amounts of digital files into a heist bag, arms overflowing with folders">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The hacker<br><span class="accent">downloaded everything.</span></p>
+              <p class="story-line gap">Then downloaded more things.</p>
+              <p class="story-line">Then downloaded things they didn't even need.</p>
+              <p class="story-line gap bold italic">Hackers can be greedy.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">5</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 6: PAGE 6
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread6">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/page_06_hacker_shares_1777384336848.png"
+                   alt="Three hackers in a chain passing stolen data between each other, the last one uploading to a skull server">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">Then the hacker<br><span class="accent">shared files</span><br>with another hacker.</p>
+              <p class="story-line gap">Who shared them with another hacker.</p>
+              <p class="story-line">Who uploaded them somewhere terrible.</p>
+              <p class="story-line gap bold italic">Alexander hated chain collaboration.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">6</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 7: PAGE 7
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread7">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p07_v3.png"
+                   alt="2:14 AM chaos - phones ringing everywhere, sleepy security analyst at monitor, Alexander hiding under pillow dreaming of being a baker">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">At <span class="blue">2:14 AM,</span><br>someone noticed unusual activity.</p>
+              <p class="story-line">At 2:15 AM, security got an alert.</p>
+              <p class="story-line gap bold">At 2:16 AM,<br>everyone's phones started ringing.</p>
+              <p class="story-line gap">At 2:17 AM,</p>
+              <p class="story-line italic">Alexander wished he had become a baker.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">7</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 8: PAGE 8
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread8">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p08_v3.png"
+                   alt="Lawyer pointing dramatically while log screen shows giant shrug emoticon, Alexander looks mortified">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The legal team asked:<br><span class="accent">"What exactly was stolen?"</span></p>
+              <p class="story-line gap">The security team checked the logs.</p>
+              <p class="story-line bold">The logs said:</p>
+              <p class="story-line shrug">¯\_(ツ)_/¯</p>
+              <p class="story-line italic gap">This was not helpful.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">8</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 9: PAGE 9
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread9">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p09_v3.png"
+                   alt="Compliance officer dramatically deflating after hearing 'Not exactly' from security person, Alexander watching nervously">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The compliance team asked:<br><span class="accent">"Can we prove<br>what was accessed?"</span></p>
+              <p class="story-line gap bold">The answer was:</p>
+              <p class="story-line dramatic">"Not exactly."</p>
+              <p class="story-line gap italic">The compliance team became dramatically less cheerful.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">9</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 10: PAGE 10
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread10">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p10_v3.png"
+                   alt="Alexander hiding under his desk surrounded by ringing phones, reporters, customers, and board members calling him">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">Then customers<br>started <span class="accent">calling.</span></p>
+              <p class="story-line gap">Then reporters started calling.</p>
+              <p class="story-line">Then the board started calling.</p>
+              <p class="story-line gap bold italic">Alexander stopped answering unknown numbers.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">10</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 11: PAGE 11
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread11">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p11_v3.png"
+                   alt="Tiny Alexander before a grand boardroom table full of stern board members, one with monocle asking 'How did this happen?' and Alexander with a chaotic thought bubble">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The board asked:<br><span class="accent">"How did this happen?"</span></p>
+              <p class="story-line gap">Alexander said:</p>
+              <p class="story-line italic">"That is a longer story<br>than this book allows."</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">11</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 12: PAGE 12
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread12">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p12_v3.png"
+                   alt="Office with security tool icons (endpoint shield, network monitoring, identity locks, file finders) but a giant gap in the middle where data escapes unprotected">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">The company said:<br><span class="good">"But we have<br>security tools!"</span></p>
+              <p class="story-line gap">And they did.</p>
+              <p class="story-line list-item">Tools for endpoints.</p>
+              <p class="story-line list-item">Tools for networks.</p>
+              <p class="story-line list-item">Tools for identities.</p>
+              <p class="story-line list-item">Tools for finding sensitive files.</p>
+              <p class="story-line gap bold accent">But not enough protection followed the data once it moved.</p>
+              <p class="story-line italic">That was a problem.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">12</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 13: PAGE 13
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread13">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p13_v3.png"
+                   alt="Alexander in superhero cape holding checklist, surrounded by icons: magnifying glass finding data, lock controlling access, shield traveling with documents, crossed-out phishing email">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading">So Alexander made<br>a <span class="good">better plan:</span></p>
+              <p class="story-line plan-item">🔍 Find sensitive data.</p>
+              <p class="story-line plan-item">🔐 Control who touches it.</p>
+              <p class="story-line plan-item">🛡️ Protect the data itself.</p>
+              <p class="story-line plan-item">✈️ Keep protection attached wherever it travels.</p>
+              <p class="story-line plan-item">🚫 And never trust urgent password emails.</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">13</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SPREAD 14: PAGE 14 — THE END
+      ═══════════════════════════════════════════════ -->
+      <div class="spread-view" id="spread14">
+        <div class="page-half left">
+          <div class="illustration-wrap">
+              <img src="img/p14_v3.png"
+                   alt="Alexander at calm desk with coffee, all-systems-normal monitors, silent phone, boring newspaper. Tiny caged hacker carried away in corner.">
+            </div>
+        </div>
+        <div class="page-half right">
+          <div class="page-inner">
+            <div class="page-text">
+              <p class="page-heading"><span class="good">Soon there were fewer</span><br>midnight calls.</p>
+              <p class="story-line">Fewer headlines.</p>
+              <p class="story-line">Fewer panic meetings.</p>
+              <p class="story-line gap bold">And far fewer terrible, horrible, no good, very bad breaches.</p>
+              <p class="story-line gap">Alexander still hated phishing emails.</p>
+              <p class="story-line italic gap">But things got much better.</p>
+              <p class="story-line dramatic">✨ The End. ✨</p>
+              <p class="story-line italic" style="margin-top:16px; font-size:0.75rem; color: var(--secondary);">A cautionary tale for modern security teams · confidencial.io</p>
+            
+            <div class="page-num-badge">
+              <span class="badge-flourish">❧</span>
+              <span class="badge-circle">14</span>
+              <span class="badge-flourish">❧</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /book-spread -->
+  </main>
+
+  <!-- ============== AFTER-STORY CTA ============== -->
+  <section class="story-cta" aria-label="See Confidencial in action">
+    <div class="cta-card">
+      <div class="cta-flourish">❧</div>
+      <h2 class="cta-heading">Want to skip the terrible, horrible,<br>no good, very bad breach?</h2>
+      <p class="cta-sub">See how Confidencial keeps the data dark<br>even when everything else goes sideways.</p>
+      <a class="cta-button" href="https://www.confidencial.io/interactive-demo-watch" target="_blank" rel="noopener noreferrer">
+        See it in action →
+      </a>
+      <p class="cta-foot">A 3-minute interactive demo · confidencial.io</p>
+    </div>
+  </section>
+  <!-- ============== /AFTER-STORY CTA ============== -->
+
+  <style>
+    .story-cta {
+      max-width: 720px;
+      margin: 48px auto 64px;
+      padding: 0 24px;
+      font-family: 'Nunito', sans-serif;
+    }
+    .cta-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #F1F5FE 100%);
+      border: 2px solid var(--sapphire);
+      border-radius: 18px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(24, 98, 247, 0.14);
+    }
+    .cta-flourish {
+      font-size: 1.6rem;
+      color: var(--sapphire);
+      margin-bottom: 12px;
+      letter-spacing: 0.4em;
+    }
+    .cta-heading {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+      line-height: 1.25;
+      color: var(--garnet);
+      margin-bottom: 14px;
+    }
+    .cta-sub {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #334155;
+      margin-bottom: 26px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: var(--sapphire);
+      color: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 999px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 6px 16px rgba(24, 98, 247, 0.28);
+    }
+    .cta-button:hover {
+      background: #0F4FD6;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(24, 98, 247, 0.34);
+    }
+    .cta-button:active {
+      transform: translateY(0);
+    }
+    .cta-foot {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--secondary, #64748B);
+    }
+    @media (max-width: 520px) {
+      .cta-card { padding: 32px 22px; }
+      .cta-heading br { display: none; }
+      .cta-sub br { display: none; }
+    }
+  </style>
+
+  <script>
+    let currentPage = 0;
+    const totalPages = 14; // 0..14
+
+    const navIds = ['navCover','nav1','nav2','nav3','nav4','nav5','nav6','nav7','nav8','nav9','nav10','nav11','nav12','nav13','nav14'];
+
+    function updateUI() {
+      // Show/hide spreads
+      for (let i = 0; i <= totalPages; i++) {
+        const el = document.getElementById('spread' + i);
+        if (el) {
+          if (i === currentPage) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        }
+      }
+
+      // Update nav buttons
+      navIds.forEach((id, idx) => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.toggle('active', idx === currentPage);
+        }
+      });
+
+      // Arrow states
+      document.getElementById('prevBtn').disabled = currentPage === 0;
+      document.getElementById('nextBtn').disabled = currentPage === totalPages;
+
+      // Progress bar
+      const pct = ((currentPage + 1) / (totalPages + 1)) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    function goToPage(n) {
+      currentPage = n;
+      updateUI();
+      // Smooth scroll to book on mobile
+      document.querySelector('.book-stage').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function changePage(delta) {
+      const next = currentPage + delta;
+      if (next >= 0 && next <= totalPages) {
+        goToPage(next);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changePage(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changePage(-1);
+    });
+
+    // Swipe support
+    let touchStartX = 0;
+    document.getElementById('bookSpread').addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    document.getElementById('bookSpread').addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) changePage(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    // Init
+    updateUI();
+  </script>
+
+</body>
+</html>
